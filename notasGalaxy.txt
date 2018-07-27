@@ -1,0 +1,83 @@
+
+WEATHER GALAXY 
+--------------------------------------------------------------------------------------------------------------------------
+
+Weather Galaxy es una aplicación desarrollada para poder predecir el clima. (En otra galaxia)
+Las tecnologías y herramientas que se han utilizado para su desarrollo y despliegue son:
+
+•	-Java 8
+•	-SpringBoot 1.5.9
+•	Spring InitialZR (https://start.spring.io/)
+•	Apache Maven 3.5.4
+•	Eclipse Oxygen  4.7.0
+•	Mongo DB 3.6
+•	mLab (https://mlab.com/login/)
+•	Google Cloud Platform
+•	Appengine SDK y MVN Plugin (GCP)
+•	Apache Commons Math3 (Precision)
+
+URL Y ENDPOINTS
+
+URL:   https://galaxia-sl.appspot.com/
+
+Carga de datos = "/galaxyWeatherInitDB"
+Eliminación de datos = "/galaxyWeatherDeleteDB"
+Clima de un día en particular = "/clima/{day}"
+Periodos de un tipo de clima en particular = "/periodos/{weatherType}"  
+ (weatherType : SEQUIA, LLUVIA, OPTIMO, INESTABLE)
+Dia de lluvia maxima = "/diaMaxLluvia"
+
+Ejemplos:
+
+https://galaxia-sl.appspot.com/clima/566    
+Response: {"code":"OK","message":"Dia:566   Clima:LLUVIA"}
+https://galaxia-sl.appspot.com/periodos/sequia 
+Response: {"code":"OK","message":" 8  dias de SEQUIA: 11, 344, 366, 699, 721, 1054, 1076, 1409"}
+https://galaxia-sl.appspot.com/diaMaxLluvia 
+Response: {"code":"OK","message":"Día mas lluvioso: 1367"}
+https://galaxia-sl.appspot.com/clima/4566 
+Response {"code":"ERROR_INPUT_PARAM","message":"Día ingresado invalido"}
+
+ 
+APPLICATION PROPERTIES
+En el archivo application.properties se definen:
+•	Las propiedades de conexión a la base de datos MongoDB de mLab.
+•	Características de los planetas de la galaxia (Distancia al sol, velocidad, dirección)
+•	La cantidad de días que se va a predecir el clima (Default: 10 años terrestres).
+•	La precisión para poder calcular la alineación de los planetas (Default 1 decimal).
+
+CARGA DE DATOS
+Los datos del clima se cargan en la base al inicializarle la aplicación (ApplicationListener contextRefreshed)
+También se pueden cargar y eliminar los datos de la base a través de la API REST
+
+
+
+ALGUNAS SUPOSICIONES
+--Todos los planetas giran alrededor del sol con movimiento circular uniforme.
+--Si bien la  app la quieren los vulcanos para ver el clima los próximos 10 años, 
+(año vulcano:  72 días -> 10 años = 720 días)  Se van a realizar cálculos para años terrestres (3650 días)
+--En el día "cero" todos los planetas se encuentran en el eje X alineados
+Se considera que el sentido anti horario es positivo (1) ya que es en la dirección en que el ángulo que forma con el eje se amplía. Los cálculos se realizan del dia 1 al 3650
+--Se utiliza una precisión de 1 decimal para determinar si los planetas están alineados.
+--El sol tiene coordenadas [0,0]
+--Cuando el clima no es óptimo, no llueve y no es seco, se considera que el tipo de clima es INESTABLE.
+
+ARQUITECTURA:
+CAPAS:
+SE SERVICE ENDOPOINT
+En esta capa se encuentran definidos los endpoint de acceso a la aplicación
+MANAGER 
+En esta capa se procesan los resultados obtenidos por la capa de negocio y se fabrica la respuesta que se va a enviar
+BO BUSINESS
+En esta capa esta toda la lógica de cálculo galáctico
+DAO DATA ACCES
+En esta capa encontramos el acceso al repositorio
+MODEL
+Se definen todas las entidades. 
+
+ 
+
+
+
+
+
